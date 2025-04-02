@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# example of counting unique users on the system with BASH functionality only
+# yes, 'uniq -c' makes life easer
+
+# declare assoative array of integers
+declare -iA arr
+
+for i in $(w -h | cut -c1-8); do   # get list of currenly logged users into loop
+  for u in ${!arr[@]}; do   # check that they are unique
+    if [[ $i == $u ]]; then
+      ((arr[$i]++))
+      continue 2
+    fi
+  done
+  arr[$i]=1  # if new, add a new array element
+done
+
+for j in ${!arr[@]}; do    # printing out
+  echo ${arr[$j]} $j
+done
