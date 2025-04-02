@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# tarit version with getopt implemented
+
+# common usage function with the exit at the end
+usage() {
+  echo "Usage: ${0##*/} [options] file [file [file...]]"
+  echo '       -s, silent mode'
+  echo '       -d <directory/path/backup>, path for the backups'
+  echo '       -y, overwrite existing tar archive'
+  echo '       -h, this help message'
+  exit 1
+}
+
+opts=$(getopt "syhd:" "$@") || usage
+set -- $opts
+
+OVERWRITE='' # by default no overwriting
+SILENT='' # silent mode off
+BDIR='.' # current dir is the default place for the new archives
+
+while true; do
+  case ${1} in
+    -h) usage ;; # output help message and exit
+    -s) SILENT='&>/dev/null' ;; # send tar output to 'null'
+    -y) OVERWRITE='yes' ;; # forcing ovewriting, any non-empty works
+    -d) shift # shift to take next item as a directory path for -d
+        if [[ -z "$1" || ! -d "$1" ]]; then
+          echo "ERROR: the directory does not exist"
+          usage
+        else
+          BDIR="$1"
+        fi
+     ;;
+    --) shift; break ;;  # remove --, and get out of the loop
+  esac
+  shift
+done
+
+# by default no directories to archive. i.e. current
+args=''
+
+# checking for STDIN, if any, assigning STDIN to $args
+[[ -p /dev/stdin ]] && args=$(</dev/stdin)
+
+# if arguments are given, appending the $args
+[[ -n $@ ]] && args+=" $@"
+
+# no arguments, no stdin, then it is a current dir
+[[ -z "$args" ]] && args="$(pwd)"
+
+# by now we should have a directory list in $args to archive
+for d in $args; do
+  # checking that directory exists
+  if [[ -d "$d" ]]; then
+    # upcoming archive name
+    archive="${BDIR}/$(basename $d).$(date +%Y-%m-%d).tar.gz"
+    # if archive exists and OVERWRITE is not set, then skip
+    # otherwise make an archive
+    if [[ -r "$archive" && -z $OVERWRITE ]]; then
+      echo $archive is already there
+    else
+      [[ -z $SILENT ]] && echo Archiving $d ...
+      eval tar caf "$archive" "$d" $SILENT
+    fi
+  else
+    echo "   $d does not exist, skipping."
+  fi
+done
