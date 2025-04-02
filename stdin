@@ -1,0 +1,8 @@
+#!/bin/bash
+
+### demo for the STDIN handling in BASH
+
+if [[ -p /dev/stdin ]]; then
+  # passing STDIN to a pipeline  (/dev/stdin can be omitted)
+  cat /dev/stdin | cut -d':' -f 1,5 | sort
+fi
