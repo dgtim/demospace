@@ -1,0 +1,19 @@
+#!/bin/bash
+
+# demo version of the cx
+# see lecture notes for the full explanation
+  
+if [[ -z "$@" ]]; then
+  echo "Usage: ${0##*/} file [file [file...]]"
+  exit 1
+fi
+
+
+# create a file 'cx'
+case "$0" in
+ *cx) chmod +x "$@" ;&
+ *cw) chmod +w "$@" ;;
+ *c-w) chmod -w "$@" ;;
+ *cr) chmod a+r "$@" ;;
+ *) echo "$0: seems that file name is somewhat different"; exit 1 ;;
+esac
