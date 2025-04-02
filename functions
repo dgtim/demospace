@@ -1,0 +1,38 @@
+# BASH functions developed during the course 
+#
+# to initialize: source functions
+# to check: type -a functionname
+
+
+appendPATH() {
+  local dpath=${1:?directory is missing} && \
+  [[ -d $dpath && ! $PATH =~ $d ]] && export PATH+=:$dpath
+}
+
+
+me() {
+  echo $(id -un):$(id -gn)@$(hostname -s)
+}
+
+spaceusage() {
+  # $1 is the argument given to the function
+  du -hs ${1:-.}/* ${1:-.}/.[!.]* 2>/dev/null | sort -h
+  return 34
+}
+
+# get filename out of path
+filename() {
+  local fpath=${1:?path is missing} && \
+  echo $fpath
+  echo ${fpath##*/}
+}
+
+filebasename() {
+  local fpath=${1:?file name is missing} && \
+  { fpath=${fpath##*/}; echo ${fpath%.*}; }
+}
+# fast find function
+ff() {
+  local word=${1:?search word missing} && \
+  find .  -iname "*${word}*"
+}
