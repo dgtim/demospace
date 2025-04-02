@@ -1,0 +1,26 @@
+#!/bin/bash
+
+### a few 'if ...' demos
+
+# ping google to check connectivity
+if ping -c 1 google.com &> /dev/null; then
+  echo Online
+elif ! ping -c 1 127.0.0.1 &> /dev/null; then
+  echo Local interface is down
+else
+  echo No external connection
+fi
+
+
+# compare strings given as args
+if [[ -z $1 ]]; then
+  echo no arguments
+  exit 1
+fi
+
+if [[ "$1" == "$2" ]]
+then
+  echo The strings are the same
+else
+  echo The strings are different
+fi
