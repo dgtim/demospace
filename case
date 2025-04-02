@@ -1,0 +1,20 @@
+#!/bin/bash
+
+### a simple 'case' statement demo, also introduces 'read'
+  
+read -p "Do you want to create a directory (y/n)? " yesno   # expects user input
+case $yesno in
+  y|yes)
+    dir='dirname'
+    echo Creating a new directory $dir
+    mkdir $dir
+    cd $dir
+    ;;
+  n|no)
+    echo Proceeding in the current dir $(pwd)
+    ;;
+  *)
+    echo Invalid response
+    exit 1
+    ;;
+esac
