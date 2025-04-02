@@ -1,0 +1,17 @@
+#!/bin/bash
+
+# the very first initial version of tarit wrapper
+# tarit v1 
+
+# usage: tarit.sh <dirname>
+
+d=$1
+
+# if dirname is given, we archive it
+if [[ -d $d ]]; then
+  tar caf $(basename $d).$(date +%Y-%m-%d).tar.gz $d
+elif [[ -z $d ]]; then
+  tar caf $(basename $(pwd)).$(date +%Y-%m-%d).tar.gz .
+else
+  echo $d does not exist
+fi
