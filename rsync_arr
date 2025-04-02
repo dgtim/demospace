@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# demo with the associative arrays in BASH
+# script automates backups or just makes a sync of data to a remote server
+
+# array of directories to be backuped, to skip one, just comment with #
+declare -A dirs
+dirs[local]=/local/dir
+dirs[another]=/another/local/dir
+dirs[yetanother]=/yet/another/dir
+
+cmd='/usr/bin/rsync'                   # rsync
+args="-auvW --delete --progress $@"    # accept extra args, like '-n' for the dryrun first
+serv='user@server:backups'             # copying to ~/backups that must exist
+
+# array key is used for the remote dir name
+for d in ${!dirs[@]}; do
+  echo "Syncing ${dirs[$d]}..."
+  $cmd $args ${dirs[$d]}/ $serv/$d
+done
