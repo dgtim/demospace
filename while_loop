@@ -1,0 +1,21 @@
+#!/bin/bash
+
+### while / until statements demo
+
+# Reading file from file and handling fields any way you want
+file=$1
+# IFS is a delimiter, expected input like: txt1;txt2;txt3;...
+while IFS=\; read -r f1 f2 f3 f4 f5; do
+  printf 'Field1: %s, Field2: %s, Field5: %s\n' "$f1" "$f2" "$f5"
+done < "$file"
+
+
+# Request a new directory name till correct one is given (interrupt with Ctrl-C)
+regexp='^[a-zA-Z0-9/_-]+$'  # regular expression to validate the input
+until [[ "$newdir" =~ $regexp ]]; do
+  read -p 'New directory: ' newdir
+done
+
+# if here, we assume a suitable dir name is given; check the existence first 
+# do nothing if directory already exists
+[[ -d "$newdir" ]] || mkdir "$newdir"
