@@ -10,13 +10,13 @@ usage() {
   echo '       -a, gives access to all, like a+x, by default +x'
   echo '       -d <directory/path/bin>, path to the bin directory'
   echo "          can be used in 'cx' to copy a new script there"
-  echo '       -a, gives access to all, like a+x, by default +x'
-  echo '       -d <directory/path/bin>, path to the bin directory'
-  echo "          can be used in 'cx' to copy a new script there"
   echo '       -v, verbose mode for chmod'
   echo '       -h, this help message'
   exit 1
 }
+
+# checking for STDIN, if any, merging STDIN to $@
+[[ -p /dev/stdin ]] && set -- $@ $(</dev/stdin)
 
 # whole trick is in this part: getopt validates the input parameters,
 # structures them by dividing options and arguments with --,
